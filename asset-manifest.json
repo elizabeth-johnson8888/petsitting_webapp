@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/petsitting_webapp/static/css/main.2ce6e67e.css",
-    "main.js": "/petsitting_webapp/static/js/main.d3614cc8.js",
+    "main.js": "/petsitting_webapp/static/js/main.a5cce408.js",
     "static/js/453.ad6eb26e.chunk.js": "/petsitting_webapp/static/js/453.ad6eb26e.chunk.js",
     "index.html": "/petsitting_webapp/index.html",
     "main.2ce6e67e.css.map": "/petsitting_webapp/static/css/main.2ce6e67e.css.map",
-    "main.d3614cc8.js.map": "/petsitting_webapp/static/js/main.d3614cc8.js.map",
+    "main.a5cce408.js.map": "/petsitting_webapp/static/js/main.a5cce408.js.map",
     "453.ad6eb26e.chunk.js.map": "/petsitting_webapp/static/js/453.ad6eb26e.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.2ce6e67e.css",
-    "static/js/main.d3614cc8.js"
+    "static/js/main.a5cce408.js"
   ]
 }
