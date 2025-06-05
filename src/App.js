@@ -17,7 +17,7 @@ function App() {
         <HowToBookMe />
         <RulesSection />
         <ImageCarousel />
-        <DogSittingReviews />
+        {/* <DogSittingReviews /> */}
       </header>
     </div>
   );
@@ -219,98 +219,98 @@ function ImageCarousel() {
 
 
 
-// attempt of the reviews 
-const config = {
-  headers: {
-    Authorization: `Bearer ${AIRTABLE_TOKEN}`,
-    "Content-Type": "application/json",
-  },
-};
+// // attempt of the reviews 
+// const config = {
+//   headers: {
+//     Authorization: `Bearer ${AIRTABLE_TOKEN}`,
+//     "Content-Type": "application/json",
+//   },
+// };
 
-function DogSittingReviews() {
-  const [formData, setFormData] = useState({ name: "", review: "" });
-  const [reviews, setReviews] = useState([]);
+// function DogSittingReviews() {
+//   const [formData, setFormData] = useState({ name: "", review: "" });
+//   const [reviews, setReviews] = useState([]);
 
-  const fetchReviews = async () => {
-    try {
-      const res = await axios.get(
-        `https://api.airtable.com/${AIRTABLE_BASE_ID}`,
-        config
-      );
-      const formatted = res.data.records.map((r) => ({
-        id: r.id,
-        name: r.fields.Name,
-        review: r.fields.Review,
-      }));
-      setReviews(formatted);
-    } catch (err) {
-      console.error("Error fetching reviews:", err);
-    }
-  };
+//   const fetchReviews = async () => {
+//     try {
+//       const res = await axios.get(
+//         `https://api.airtable.com/${AIRTABLE_BASE_ID}`,
+//         config
+//       );
+//       const formatted = res.data.records.map((r) => ({
+//         id: r.id,
+//         name: r.fields.Name,
+//         review: r.fields.Review,
+//       }));
+//       setReviews(formatted);
+//     } catch (err) {
+//       console.error("Error fetching reviews:", err);
+//     }
+//   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!formData.name || !formData.review) return alert("Please fill out both fields");
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     if (!formData.name || !formData.review) return alert("Please fill out both fields");
 
-    try {
-      await axios.post(
-        `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}`,
-        {
-          fields: {
-            Name: formData.name,
-            Review: formData.review,
-          },
-        },
-        config
-      );
-      setFormData({ name: "", review: "" });
-      fetchReviews(); // refresh
-    } catch (err) {
-      console.error("Error submitting review:", err);
-    }
-  };
+//     try {
+//       await axios.post(
+//         `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}`,
+//         {
+//           fields: {
+//             Name: formData.name,
+//             Review: formData.review,
+//           },
+//         },
+//         config
+//       );
+//       setFormData({ name: "", review: "" });
+//       fetchReviews(); // refresh
+//     } catch (err) {
+//       console.error("Error submitting review:", err);
+//     }
+//   };
 
-  useEffect(() => {
-    fetchReviews();
-  }, []);
+//   useEffect(() => {
+//     fetchReviews();
+//   }, []);
 
-  return (
-    <div className="p-4 max-w-lg mx-auto">
-      <h2 className="text-xl font-bold mb-4">Leave a Review for My Dog Sitting</h2>
-      <form onSubmit={handleSubmit} className="space-y-3">
-        <input
-          name="name"
-          value={formData.name}
-          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          placeholder="Your name"
-          className="w-full border p-2 rounded"
-        />
-        <textarea
-          name="review"
-          value={formData.review}
-          onChange={(e) => setFormData({ ...formData, review: e.target.value })}
-          placeholder="Your review"
-          className="w-full border p-2 rounded"
-        />
-        <button className="bg-blue-600 text-white px-4 py-2 rounded" type="submit">
-          Submit Review
-        </button>
-      </form>
+//   return (
+//     <div className="p-4 max-w-lg mx-auto">
+//       <h2 className="text-xl font-bold mb-4">Leave a Review for My Dog Sitting</h2>
+//       <form onSubmit={handleSubmit} className="space-y-3">
+//         <input
+//           name="name"
+//           value={formData.name}
+//           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+//           placeholder="Your name"
+//           className="w-full border p-2 rounded"
+//         />
+//         <textarea
+//           name="review"
+//           value={formData.review}
+//           onChange={(e) => setFormData({ ...formData, review: e.target.value })}
+//           placeholder="Your review"
+//           className="w-full border p-2 rounded"
+//         />
+//         <button className="bg-blue-600 text-white px-4 py-2 rounded" type="submit">
+//           Submit Review
+//         </button>
+//       </form>
 
-      <div className="mt-6">
-        <h3 className="text-lg font-semibold">What Others Said</h3>
-        {reviews.length === 0 ? (
-          <p>No reviews yet.</p>
-        ) : (
-          <ul className="space-y-3 mt-2">
-            {reviews.map((r) => (
-              <li key={r.id} className="border p-2 rounded shadow">
-                <strong>{r.name}</strong>: {r.review}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-    </div>
-  );
-}
+//       <div className="mt-6">
+//         <h3 className="text-lg font-semibold">What Others Said</h3>
+//         {reviews.length === 0 ? (
+//           <p>No reviews yet.</p>
+//         ) : (
+//           <ul className="space-y-3 mt-2">
+//             {reviews.map((r) => (
+//               <li key={r.id} className="border p-2 rounded shadow">
+//                 <strong>{r.name}</strong>: {r.review}
+//               </li>
+//             ))}
+//           </ul>
+//         )}
+//       </div>
+//     </div>
+//   );
+// }
