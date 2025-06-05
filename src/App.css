@@ -2,7 +2,7 @@
   text-align: center;
 }
 
-.App-logo {
+/* .App-logo {
   height: 40vmin;
   pointer-events: none;
 }
@@ -11,6 +11,11 @@
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
+} */
+
+.Profile-image {
+  height: 40vmin;
+  margin-right: 1em;
 }
 
 .App-header {
@@ -24,15 +29,26 @@
   color: white;
 }
 
-.App-link {
+/* .App-link {
   color: #61dafb;
-}
+} */
 
-@keyframes App-logo-spin {
+/* @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
   to {
     transform: rotate(360deg);
   }
+} */
+
+.About-Me-Section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.Image-Carosel {
+  height: 40vmin;
 }
