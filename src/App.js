@@ -19,6 +19,7 @@ function App() {
         <UserProfile />
         <MyServicesSection />
         <HowToBookMe />
+        <HireMeForm />
         <RulesSection />
         <ImageCarousel />
         <AirtableReviews />
@@ -164,8 +165,231 @@ function HowToBookMe() {
 
 // Form
 // Get persons name, phone number, address
-// Get number of pets, pet types, and names
+// Get number of pets, pet types, and names, age
 // add captcha to form
+function HireMeForm() {
+  const [formData, setFormData] = useState({
+    owner_name: '',
+    phone: '',
+    address: '',
+    pets_num: '1',
+    services: []
+  });
+
+  
+  const [pets, setPets] = useState([
+    { type: '', other: '', name:'', age:''}
+  ]);
+  
+  const handleServiceCheckboxChange = (e) => {
+    const { value, checked } = e.target;
+
+    setFormData(prev => {
+      const services = new Set(prev.services);
+      if (checked) {
+        services.add(value);
+      } else {
+        services.delete(value);
+      }
+      return { ...prev, services: Array.from(services) };
+    });
+  };
+
+  const handlePetTypeChange = (index, value) => {
+    const updated = [...pets];
+    updated[index].type = value;
+    if (value !== 'Other') {
+      updated[index].other = '';
+    }
+    setPets(updated);
+  };
+
+  const handleOtherTypeChange = (index, value) => {
+    const updated = [...pets];
+    updated[index].other = value;
+    setPets(updated);
+  };
+
+  const handlePetAgeChange = (index, value) => {
+    const updated = [...pets];
+    updated[index].age = value;
+    setPets(updated);
+  };
+
+  const handlePetNameChange = (index, value) => {
+    const updated = [...pets];
+    updated[index].name = value;
+    setPets(updated);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+
+    // If number of pets changes, adjust the pets array
+    if (name === 'pets_num') {
+      const num = parseInt(value);
+      if (!isNaN(num) && num > 0) {
+        const updatedPets = Array.from({ length: num }, (_, i) => pets[i] || { type: '', other: '' , name:'' , age:''});
+        setPets(updatedPets);
+      }
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const petList = pets.map((p) => ({
+      type: p.type === 'Other' ? p.other : p.type,
+      name: p.name,
+      age: p.age
+    }));
+
+    const dataToSend = {
+      ...formData,
+      pets: petList,
+    };
+
+    alert(`Submitted: ${JSON.stringify(dataToSend, null, 2)}`);
+    // You can send `chosenPet` to Airtable or anywhere else here
+  };
+  return (
+    <form onSubmit={handleSubmit} className="max-w-md mx-auto p-4 bg-white shadow-md rounded-lg space-y-4">
+      <h2 className="text-xl font-bold">Want to hire me? Fill out my form!</h2>
+
+      <div>
+        <label className="block text-sm font-medium">Name:</label>
+        <input
+          type="text"
+          name="owner_name"
+          value={formData.owner_name}
+          onChange={handleChange}
+          required
+          className="w-full border rounded p-2"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium">Phone Number:</label>
+        <input
+          type="text"
+          name="phone"
+          value={formData.phone}
+          onChange={handleChange}
+          required
+          className="w-full border rounded p-2"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium">Address:</label>
+        <input
+          type="text"
+          name="address"
+          value={formData.address}
+          onChange={handleChange}
+          required
+          className="w-full border rounded p-2"
+        />
+      </div>
+
+      <div>
+        <label>What service(s) would you like me to provide?</label>
+        <div>
+          {['Drop-in', 'Walk', 'House-sit'].map(service => (
+            <label key={service}>
+              <input
+                type="checkbox"
+                value={service}
+                checked={formData.services.includes(service)}
+                onChange={handleServiceCheckboxChange}
+              />
+              <span>{service}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium">Number of Pets:</label>
+        <input
+          type="text"
+          name="pets_num"
+          value={formData.pets_num}
+          onChange={handleChange}
+          min="1"
+          required
+          className="w-full border rounded p-2"
+        />
+      </div>
+
+      {pets.map((pet, index) => (
+        <div key={index} className="space-y-2">
+          <label>
+            Choose your pet:
+            <select value={pet.type} onChange={(e) => handlePetTypeChange(index, e.target.value)}>
+              <option value="">-- Select --</option>
+              <option value="Dog">Dog</option>
+              <option value="Cat">Cat</option>
+              <option value="Fish">Fish</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+
+          {pet.type === 'Other' && (
+            <div>
+              <label>
+                Enter other type:
+                <input
+                  type="text"
+                  value={pet.other}
+                  onChange={(e) => handleOtherTypeChange(index, e.target.value)}
+                />
+              </label>
+            </div>
+          )}
+
+          <div>
+            <label>
+              What is your pet's name?
+              <input
+                type="text"
+                value={pet.name}
+                onChange={(e) => handlePetNameChange(index, e.target.value)}
+              />
+            </label>
+          </div>
+
+          <div>
+            <label>
+              How old is your pet?
+              <input
+                type="text"
+                value={pet.age}
+                onChange={(e) => handlePetAgeChange(index, e.target.value)}
+              />
+            </label>
+          </div>
+        </div>
+      ))}
+
+
+      {/* <div>
+        <label className="block text-sm font-medium">Any other information you'd like me to know:</label>
+        <textarea
+          name="additional_info"
+          value={formData.additional_info}
+          onChange={handleChange}
+          required
+          className="w-full border rounded p-2"
+        />
+      </div> */}
+
+      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+        Submit
+      </button>
+    </form>
+  );
+}
 
 // Rules
 function RulesSection() {
@@ -269,6 +493,58 @@ const AirtableReviews = () => {
 };
 
 
+// function to check whether the code is listed in the list of valid codes for reviews
+const isCodeValid = async (codeToCheck) => {
+
+  const url = `https://api.airtable.com/v0/${CODE_BASE_ID}/${CODE_TABLE_NAME}`;
+
+  try {
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${CODE_API_TOKEN}`
+      }
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error('Airtable fetch error:', data);
+      return false;
+    }
+
+    // Find matching record
+    const recordToDelete = data.records.find( record => {
+      const codeInRecord = record.fields.Code?.trim();
+      return codeInRecord === codeToCheck.trim();
+    });
+
+    if (!recordToDelete) {
+      return false;
+    }
+
+    // Delete the record
+    const deleteResponse = await fetch(`${url}/${recordToDelete.id}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${CODE_API_TOKEN}`
+      }
+    });
+
+    if (!deleteResponse.ok) {
+      console.error('Error deleting record:', await deleteResponse.json());
+      return false;
+    }
+
+    return true;
+    // const validCodes = data.records.map(record => record.fields.Code?.trim());
+    // return validCodes.includes(codeToCheck.trim());
+  } catch (error) {
+    console.error('Error checking code:', error);
+    return false;
+  }
+};
+
+
 // button that lets the user add a review
 // user must paste a generated code to write a review to ensure they are an actual client
 function ReviewForm() {
@@ -284,45 +560,47 @@ function ReviewForm() {
   };
 
   const handleSubmit = (e) => {
+    // prevents browser from refreshing page
     e.preventDefault();
-    console.log('Form submitted:', formData);
-
-    // TODO: Add logic to send data to Airtable, a backend, or an API
-    // alert(`Thanks for your review, ${formData.name}!`);
 
     const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}`;
 
-    const code = formData.code;
+    const isReviewValid = isCodeValid(formData.code);
+    if (!isReviewValid) {
+      console.error("the code was not correct")
+      alert('Your code was not valid.');
+    } else {
 
-    // get review from form data
-    const record = {
-    fields: {
-      Name: formData.name,
-      Review: formData.review
+      // get review from form data
+      const record = {
+      fields: {
+        Name: formData.name,
+        Review: formData.review
+        }
+      };
+
+      // post review to airtable, will be visible to user the next time the page is reloaded
+      try {
+        fetch (url, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${AIRTABLE_TOKEN}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(record)
+        });
+
+        alert(`Thanks for your review, ${formData.name}!`);
+        setFormData({ code: '', name: '', review: '' });
+
+      } catch (error) {
+        console.error('Error sending to Airtable:', error);
+        alert('There was a problem submitting your review.');
       }
-    };
 
-    // post review to airtable, will be visible to user the next time the page is reloaded
-    try {
-      fetch (url, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${AIRTABLE_TOKEN}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(record)
-      });
-
-      alert(`Thanks for your review, ${formData.name}!`);
+      // Reset the form
       setFormData({ code: '', name: '', review: '' });
-
-    } catch (error) {
-      console.error('Error sending to Airtable:', error);
-      alert('There was a problem submitting your review.');
     }
-
-    // Reset the form
-    setFormData({ code: '', name: '', review: '' });
   };
 
   return (
