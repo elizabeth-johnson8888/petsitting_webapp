@@ -3,9 +3,13 @@ import './App.css';
 import { useEffect, useState } from 'react';
 import axios from "axios";
 
-const AIRTABLE_BASE_ID = "app3e7IISBXeBPcfy/tblyfB4NGIZxvi0dE/viwQNghfccfLigb4m?";
-const AIRTABLE_TABLE_NAME = "DogSittingReviews";
+const AIRTABLE_BASE_ID = "app3e7IISBXeBPcfy";
+const AIRTABLE_TABLE_NAME = "tblyfB4NGIZxvi0dE";
 const AIRTABLE_TOKEN = "pat95eOKscpWfQkYN.b5aecf4159f42492ef0dc840fac3c0558e90d7d41c8e7ec1e3ab7cb7aaa0b5cc";
+
+const CODE_BASE_ID = "appxXImFya1XBVcUc"
+const CODE_TABLE_NAME = "tblacJYfneAgHgvXk";
+const CODE_API_TOKEN = "patX59ml1dWHnVocg.2410f671bcb0d313fd49ca1fe7fc64b68c847649607639c2689d22f158ee2e4d";
 
 function App() {
   return (
@@ -17,7 +21,8 @@ function App() {
         <HowToBookMe />
         <RulesSection />
         <ImageCarousel />
-        {/* <DogSittingReviews /> */}
+        <AirtableReviews />
+        <ReviewForm />
       </header>
     </div>
   );
@@ -181,9 +186,9 @@ function RulesSection() {
 // Picture carolsel of me and some animals
 
 const images = [
-  ["${process.env.PUBLIC_URL}/logo192.png", "Me and Tina"],
-  ["${process.env.PUBLIC_URL}/logo512.png", "Me and Cora"],
-  ["${process.env.PUBLIC_URL}/EJ_Emily_Bartell_Photography-22.jpg", "me and other"],
+  ["$logo192.png", "Me and Tina"],
+  ["$logo512.png", "Me and Cora"],
+  ["$EJ_Emily_Bartell_Photography-22.jpg", "me and other"],
 ];
 
 function ImageCarousel() {
@@ -218,99 +223,150 @@ function ImageCarousel() {
 }
 
 
+// gets the reviews from the airtable and puts them on the page
+const AirtableReviews = () => {
+  const [reviews, setReviews] = useState([]);
 
-// // attempt of the reviews 
-// const config = {
-//   headers: {
-//     Authorization: `Bearer ${AIRTABLE_TOKEN}`,
-//     "Content-Type": "application/json",
-//   },
-// };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}`,
+          {
+            headers: {
+              Authorization: `Bearer ${AIRTABLE_TOKEN}`,
+            },
+          }
+        );
 
-// function DogSittingReviews() {
-//   const [formData, setFormData] = useState({ name: "", review: "" });
-//   const [reviews, setReviews] = useState([]);
+        const records = response.data.records;
+        const formatted = records.map(record => ({
+          name: record.fields.Name,
+          review: record.fields.Review,
+        }));
 
-//   const fetchReviews = async () => {
-//     try {
-//       const res = await axios.get(
-//         `https://api.airtable.com/${AIRTABLE_BASE_ID}`,
-//         config
-//       );
-//       const formatted = res.data.records.map((r) => ({
-//         id: r.id,
-//         name: r.fields.Name,
-//         review: r.fields.Review,
-//       }));
-//       setReviews(formatted);
-//     } catch (err) {
-//       console.error("Error fetching reviews:", err);
-//     }
-//   };
+        setReviews(formatted);
+      } catch (error) {
+        console.error('Error fetching data from Airtable:', error);
+      }
+    };
 
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     if (!formData.name || !formData.review) return alert("Please fill out both fields");
+    fetchData();
+  }, []);
 
-//     try {
-//       await axios.post(
-//         `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}`,
-//         {
-//           fields: {
-//             Name: formData.name,
-//             Review: formData.review,
-//           },
-//         },
-//         config
-//       );
-//       setFormData({ name: "", review: "" });
-//       fetchReviews(); // refresh
-//     } catch (err) {
-//       console.error("Error submitting review:", err);
-//     }
-//   };
+  return (
+    <div>
+      <h2>Reviews:</h2>
+      <ul>
+        {reviews.map((entry, index) => (
+          <li key={index}>
+            <em>{entry.name}</em> said <em>{entry.review}</em>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
-//   useEffect(() => {
-//     fetchReviews();
-//   }, []);
 
-//   return (
-//     <div className="p-4 max-w-lg mx-auto">
-//       <h2 className="text-xl font-bold mb-4">Leave a Review for My Dog Sitting</h2>
-//       <form onSubmit={handleSubmit} className="space-y-3">
-//         <input
-//           name="name"
-//           value={formData.name}
-//           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-//           placeholder="Your name"
-//           className="w-full border p-2 rounded"
-//         />
-//         <textarea
-//           name="review"
-//           value={formData.review}
-//           onChange={(e) => setFormData({ ...formData, review: e.target.value })}
-//           placeholder="Your review"
-//           className="w-full border p-2 rounded"
-//         />
-//         <button className="bg-blue-600 text-white px-4 py-2 rounded" type="submit">
-//           Submit Review
-//         </button>
-//       </form>
+// button that lets the user add a review
+// user must paste a generated code to write a review to ensure they are an actual client
+function ReviewForm() {
+  const [formData, setFormData] = useState({
+    code: '',
+    name: '',
+    review: ''
+  });
 
-//       <div className="mt-6">
-//         <h3 className="text-lg font-semibold">What Others Said</h3>
-//         {reviews.length === 0 ? (
-//           <p>No reviews yet.</p>
-//         ) : (
-//           <ul className="space-y-3 mt-2">
-//             {reviews.map((r) => (
-//               <li key={r.id} className="border p-2 rounded shadow">
-//                 <strong>{r.name}</strong>: {r.review}
-//               </li>
-//             ))}
-//           </ul>
-//         )}
-//       </div>
-//     </div>
-//   );
-// }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Form submitted:', formData);
+
+    // TODO: Add logic to send data to Airtable, a backend, or an API
+    // alert(`Thanks for your review, ${formData.name}!`);
+
+    const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${AIRTABLE_TABLE_NAME}`;
+
+    const code = formData.code;
+
+    // get review from form data
+    const record = {
+    fields: {
+      Name: formData.name,
+      Review: formData.review
+      }
+    };
+
+    // post review to airtable, will be visible to user the next time the page is reloaded
+    try {
+      fetch (url, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${AIRTABLE_TOKEN}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(record)
+      });
+
+      alert(`Thanks for your review, ${formData.name}!`);
+      setFormData({ code: '', name: '', review: '' });
+
+    } catch (error) {
+      console.error('Error sending to Airtable:', error);
+      alert('There was a problem submitting your review.');
+    }
+
+    // Reset the form
+    setFormData({ code: '', name: '', review: '' });
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="max-w-md mx-auto p-4 bg-white shadow-md rounded-lg space-y-4">
+      <h2 className="text-xl font-bold">Submit a Review</h2>
+
+      <div>
+        <label className="block text-sm font-medium">Code:</label>
+        <input
+          type="text"
+          name="code"
+          value={formData.code}
+          onChange={handleChange}
+          required
+          className="w-full border rounded p-2"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium">Name:</label>
+        <input
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+          className="w-full border rounded p-2"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium">Review:</label>
+        <textarea
+          name="review"
+          value={formData.review}
+          onChange={handleChange}
+          required
+          className="w-full border rounded p-2"
+        />
+      </div>
+
+      <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+        Submit
+      </button>
+    </form>
+  );
+}
