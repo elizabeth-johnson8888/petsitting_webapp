@@ -52,7 +52,7 @@ function AboutMeSection() {
 function ProfileImage() {
   return (
     <img
-      src="/public/EJ_Emily_Bartell_Photography-22.jpg"
+      src="petsitting_webapp/public/EJ_Emily_Bartell_Photography-22.jpg"
       alt="Elizabeth Johnson"
       className="Profile-image"
     />
