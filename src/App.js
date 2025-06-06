@@ -186,9 +186,9 @@ function RulesSection() {
 // Picture carolsel of me and some animals
 
 const images = [
-  ["$logo192.png", "Me and Tina"],
-  ["$logo512.png", "Me and Cora"],
-  ["$EJ_Emily_Bartell_Photography-22.jpg", "me and other"],
+  ["logo192.png", "Me and Tina"],
+  ["logo512.png", "Me and Cora"],
+  ["EJ_Emily_Bartell_Photography-22.jpg", "me and other"],
 ];
 
 function ImageCarousel() {
