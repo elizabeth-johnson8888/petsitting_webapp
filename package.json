@@ -2,7 +2,7 @@
   "name": "my-react-app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://elizabeth-johnson8888.github.io/petsitting_webapp/",
+  "homepage": "https://elizabeth-johnson8888.github.io/petsitting_webapp",
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
