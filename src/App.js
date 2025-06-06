@@ -52,7 +52,7 @@ function AboutMeSection() {
 function ProfileImage() {
   return (
     <img
-      src="/EJ_Emily_Bartell_Photography-22.jpg"
+      src="${process.env.PUBLIC_URL}/EJ_Emily_Bartell_Photography-22.jpg"
       alt="Elizabeth Johnson"
       className="Profile-image"
     />
@@ -181,9 +181,9 @@ function RulesSection() {
 // Picture carolsel of me and some animals
 
 const images = [
-  ["/logo192.png", "Me and Tina"],
-  ["/logo512.png", "Me and Cora"],
-  ["/EJ_Emily_Bartell_Photography-22.jpg", "me and other"],
+  ["${process.env.PUBLIC_URL}/logo192.png", "Me and Tina"],
+  ["${process.env.PUBLIC_URL}/logo512.png", "Me and Cora"],
+  ["${process.env.PUBLIC_URL}/EJ_Emily_Bartell_Photography-22.jpg", "me and other"],
 ];
 
 function ImageCarousel() {
