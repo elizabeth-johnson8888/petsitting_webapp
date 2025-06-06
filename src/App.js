@@ -52,7 +52,7 @@ function AboutMeSection() {
 function ProfileImage() {
   return (
     <img
-      src="${process.env.PUBLIC_URL}/EJ_Emily_Bartell_Photography-22.jpg"
+      src="/public/EJ_Emily_Bartell_Photography-22.jpg"
       alt="Elizabeth Johnson"
       className="Profile-image"
     />
