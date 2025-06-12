@@ -1,15 +1,22 @@
 {
   "files": {
-    "main.css": "/petsitting_webapp/static/css/main.2ce6e67e.css",
-    "main.js": "/petsitting_webapp/static/js/main.c613bef7.js",
+    "main.css": "/petsitting_webapp/static/css/main.d67efd58.css",
+    "main.js": "/petsitting_webapp/static/js/main.6e7d5d63.js",
     "static/js/453.ad6eb26e.chunk.js": "/petsitting_webapp/static/js/453.ad6eb26e.chunk.js",
+    "static/media/InterVariable-Italic.woff2": "/petsitting_webapp/static/media/InterVariable-Italic.e295f70fe3e2df296c7b.woff2",
+    "static/media/InterVariable.woff2": "/petsitting_webapp/static/media/InterVariable.a0e477f2f1f9d2376fde.woff2",
+    "static/media/primeicons.svg": "/petsitting_webapp/static/media/primeicons.6ed59f962963a4a73af2.svg",
+    "static/media/primeicons.eot": "/petsitting_webapp/static/media/primeicons.ff0c4cd79b2ffca2de54.eot",
+    "static/media/primeicons.woff": "/petsitting_webapp/static/media/primeicons.8931fda1930c3bd21e96.woff",
+    "static/media/primeicons.ttf": "/petsitting_webapp/static/media/primeicons.a5c2a53d1ff7a9ff5933.ttf",
+    "static/media/primeicons.woff2": "/petsitting_webapp/static/media/primeicons.024b32cc7bf399b1a847.woff2",
     "index.html": "/petsitting_webapp/index.html",
-    "main.2ce6e67e.css.map": "/petsitting_webapp/static/css/main.2ce6e67e.css.map",
-    "main.c613bef7.js.map": "/petsitting_webapp/static/js/main.c613bef7.js.map",
+    "main.d67efd58.css.map": "/petsitting_webapp/static/css/main.d67efd58.css.map",
+    "main.6e7d5d63.js.map": "/petsitting_webapp/static/js/main.6e7d5d63.js.map",
     "453.ad6eb26e.chunk.js.map": "/petsitting_webapp/static/js/453.ad6eb26e.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.2ce6e67e.css",
-    "static/js/main.c613bef7.js"
+    "static/css/main.d67efd58.css",
+    "static/js/main.6e7d5d63.js"
   ]
 }
