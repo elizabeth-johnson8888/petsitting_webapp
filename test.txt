@@ -1,0 +1,74 @@
+// Install dependencies:
+// npm install express cors body-parser googleapis dotenv
+
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const { google } = require('googleapis');
+require('dotenv').config();
+const app = express();
+const PORT = process.env.PORT || 8080;
+
+app.use(cors());
+app.use(bodyParser.json());
+
+const calendarId = process.env.CALENDAR_ID;
+
+// Auth with service account
+const auth = new google.auth.GoogleAuth({
+  credentials: require('./service-account.json'),
+  scopes: ['https://www.googleapis.com/auth/calendar'],
+});
+
+const calendar = google.calendar({ version: 'v3', auth });
+
+// Get list of unavailable dates
+app.get('/unavailable-dates', async (req, res) => {
+  try {
+    const now = new Date();
+    const events = await calendar.events.list({
+      calendarId,
+      timeMin: now.toISOString(),
+      maxResults: 100,
+      singleEvents: true,
+      orderBy: 'startTime',
+    });
+
+    const dates = events.data.items.map(event => event.start.date || event.start.dateTime);
+    res.json(dates);
+  } catch (err) {
+    console.error('Failed to fetch unavailable dates', err);
+    res.status(500).send('Error retrieving calendar data');
+  }
+});
+
+// Add event to calendar
+app.post('/add-event', async (req, res) => {
+  const { name, task, start, end } = req.body;
+
+  const event = {
+    summary: `${task} for ${name}`,
+    description: `Scheduled via website booking form`,
+    start: {
+      dateTime: start,
+      timeZone: 'America/New_York',
+    },
+    end: {
+      dateTime: end,
+      timeZone: 'America/New_York',
+    },
+  };
+
+  try {
+    await calendar.events.insert({
+      calendarId,
+      resource: event,
+    });
+    res.status(200).send('Event added successfully');
+  } catch (err) {
+    console.error('Failed to add event', err);
+    res.status(500).send('Failed to add event');
+  }
+});
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
